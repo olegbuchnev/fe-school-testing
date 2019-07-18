@@ -409,8 +409,9 @@
 
                 movePiece(position);
             },
+
             amIFree() {
-                return isPieceOut();
+                return position.left === 0 && position.top === 9;
             }
         };
 
@@ -452,11 +453,26 @@
 
     function escapePlan() {
         const piece = createPiece();
-        // piece.isThereWay();
-        // piece.goForward();
-        // piece.turnRight();
-        // piece.turnLeft();
-        // piece.amIFree();
+        while (true) {
+            if (piece.isThereWay()) {
+                piece.goForward();
+                if (piece.amIFree()) {
+                    return;
+                }
+            } else {
+                // check right
+                piece.turnRight();
+                if (!piece.isThereWay()) {
+                    // check left
+                    piece.turnLeft();
+                    piece.turnLeft();
+                    if (!piece.isThereWay()) {
+                        // go back
+                        piece.turnLeft();
+                    }
+                }
+            }
+        }
     }
 
     function main() {
